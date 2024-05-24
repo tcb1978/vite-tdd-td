@@ -26,6 +26,10 @@ function App() {
     ]);
   };
 
+  const onRemoveTask = (taskId: number) => {
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+  };
+
   return (
     <div className='App'>
       <h1>Tasks</h1>
@@ -33,7 +37,9 @@ function App() {
       {tasks.length > 0 ? <TaskListHeader count={tasks.length} /> : null}
       <TaskList>
         {tasks.map((task) => (
-          <TaskListItem key={task.id}>{task.title}</TaskListItem>
+          <TaskListItem key={task.id} id={task.id} onRemoveTask={onRemoveTask}>
+            {task.title}
+          </TaskListItem>
         ))}
       </TaskList>
     </div>

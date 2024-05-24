@@ -73,4 +73,41 @@ describe('App', () => {
 
     await user.type(input, newInputValue);
   });
+
+  test('should display a remove task button', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const input = screen.getByRole('textbox', { name: /add task/i });
+    const button = screen.getByRole('button', { name: /add/i });
+
+    const newInputValue = 'New Task 1';
+
+    await user.type(input, newInputValue);
+    await user.click(button);
+
+    const removeButton = screen.getByRole('button', { name: /x/i });
+
+    expect(removeButton).toBeInTheDocument();
+  });
+
+  test('should successfully remove TaskListItem', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const input = screen.getByRole('textbox', { name: /add task/i });
+    const button = screen.getByRole('button', { name: /add/i });
+
+    const newInputValue = 'New Task 1';
+
+    await user.type(input, newInputValue);
+    await user.click(button);
+
+    const removeButton = screen.getByRole('button', { name: /x/i });
+
+    await user.click(removeButton);
+    await waitFor(() => {
+      expect(screen.queryAllByRole('listitem')).toHaveLength(0);
+    });
+  });
 });
