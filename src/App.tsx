@@ -1,26 +1,21 @@
 import { useState } from 'react';
-
-type Priority = 'p1' | 'p2' | 'p3';
-
-type Task = {
-  id: number;
-  title: string;
-  isCompleted: boolean;
-  priority?: Priority;
-};
+import { Task } from './types';
+import AddTask from './AddTask';
+import TaskList from './TaskList';
+import TaskListItem from './TaskListItem';
+import TaskListHeader from './TaskListHeader';
 
 function App() {
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: 1,
-      title: 'Task 1',
-      isCompleted: false,
-    },
-  ]);
+  console.log('App Rendered');
+  const [tasks, setTasks] = useState<Task[]>([]);
 
-  const [taskName, setTaskName] = useState<string>('');
+  const onAddTask = (taskName: string) => {
+    const trimedTaskName = taskName.trim();
 
-  const handleOnClick = () => {
+    if (!trimedTaskName) {
+      return;
+    }
+
     setTasks((prevTasks) => [
       ...prevTasks,
       {
@@ -29,27 +24,18 @@ function App() {
         isCompleted: false,
       },
     ]);
-    setTaskName('');
   };
 
   return (
     <div className='App'>
       <h1>Tasks</h1>
-      <label htmlFor='task-input'>Add Task </label>
-      <input
-        id='task-input'
-        type='text'
-        value={taskName}
-        onChange={(e) => setTaskName(e.target.value)}
-      />
-      <button onClick={handleOnClick}>Add</button>
-      <ul>
+      <AddTask onAddTask={onAddTask} />
+      {tasks.length > 0 ? <TaskListHeader count={tasks.length} /> : null}
+      <TaskList>
         {tasks.map((task) => (
-          <li key={task.id}>
-            {task.title} - {task.isCompleted ? 'Completed' : 'Pending'}
-          </li>
+          <TaskListItem key={task.id}>{task.title}</TaskListItem>
         ))}
-      </ul>
+      </TaskList>
     </div>
   );
 }
